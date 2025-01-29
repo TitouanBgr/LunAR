@@ -18,13 +18,11 @@ export class GlassesTryOn {
         this.currentPosition = new THREE.Vector3();
         this.currentRotation = new THREE.Euler();
 
-        //Updated V1
         this.baseScale = 0.3;
         this.userScaleFactor = 1.0;
         this.userOffset = new THREE.Vector3(0, 0, 0);
  
     }
-
 
     async init() {
         try {
@@ -158,10 +156,13 @@ smoothLerp(start, end, factor) {
     }
 
     animate = () => {
-        this.startTracking();
-        this.renderer.render(this.scene, this.camera);
-        requestAnimationFrame(this.animate);
+        if (this.isTracking) {
+            requestAnimationFrame(this.animate);
+            this.startTracking();
+            this.renderer.render(this.scene, this.camera);
+        }
     }
+    
 
 
     onFaceDetected(results) {
@@ -187,7 +188,7 @@ smoothLerp(start, end, factor) {
                 const maxScale = 1.5;
                 let finalScale = Math.min(maxScale, Math.max(minScale, scaleFactor));
     
-                const scaleAdjustment = 1.1;
+                const scaleAdjustment = 1.1; // Augmente légèrement la taille des lunettes
                 finalScale *= scaleAdjustment;
                 this.model.scale.set(finalScale, finalScale, finalScale);
     
@@ -200,6 +201,11 @@ smoothLerp(start, end, factor) {
                     -(((leftEye.y + rightEye.y) / 2) - 0.5) * 5 + adjustedVerticalOffset,
                     -((leftEye.z + rightEye.z) / 2) * 5
                 );
+    
+                const positionThreshold = 0.005; // Évite les petits mouvements inutiles
+                if (this.model.position.distanceTo(targetPosition) > positionThreshold) {
+                    this.lerpVector3(this.model.position, targetPosition, 0.2);
+                }
     
                 const faceNormal = new THREE.Vector3(
                     rightEye.x - leftEye.x,
@@ -225,15 +231,19 @@ smoothLerp(start, end, factor) {
                 correctionQuaternion.setFromEuler(new THREE.Euler(Math.PI, 0, 0)); // Rotation de 180° sur X
                 targetQuaternion.multiply(correctionQuaternion);
     
-                this.lerpVector3(this.model.position, targetPosition, 0.2);
-                this.model.quaternion.slerp(targetQuaternion, 0.2);
+                const maxTilt = Math.PI / 6;
+                const eulerRotation = new THREE.Euler().setFromQuaternion(targetQuaternion);
+                eulerRotation.z = Math.max(-maxTilt, Math.min(maxTilt, eulerRotation.z));
+                targetQuaternion.setFromEuler(eulerRotation);
+
+                const speedFactor = Math.min(1, Math.max(0.05, this.model.position.distanceTo(targetPosition) * 3));
+    
+                this.lerpVector3(this.model.position, targetPosition, speedFactor);
+                this.model.quaternion.slerp(targetQuaternion, speedFactor);
             }
         }
     }
     
-
-
-
     async loadGlassesModel(modelPath) {
         try {
             const gltf = await this.loader.loadAsync(modelPath);

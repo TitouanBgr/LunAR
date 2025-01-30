@@ -21,7 +21,7 @@ export class GlassesTryOn {
         this.baseScale = 0.3;
         this.userScaleFactor = 1.0;
         this.userOffset = new THREE.Vector3(0, 0, 0);
- 
+
     }
 
     async init() {
@@ -188,7 +188,7 @@ smoothLerp(start, end, factor) {
                 const maxScale = 1.5;
                 let finalScale = Math.min(maxScale, Math.max(minScale, scaleFactor));
     
-                const scaleAdjustment = 1.1; // Augmente légèrement la taille des lunettes
+                const scaleAdjustment = 1.2; // Augmente légèrement la taille des lunettes
                 finalScale *= scaleAdjustment;
                 this.model.scale.set(finalScale, finalScale, finalScale);
     

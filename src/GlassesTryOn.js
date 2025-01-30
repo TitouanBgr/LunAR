@@ -246,21 +246,26 @@ smoothLerp(start, end, factor) {
     
     async loadGlassesModel(modelPath) {
         try {
+            if (this.model) {
+                this.scene.remove(this.model);
+                this.model = null;
+            }
+    
             const gltf = await this.loader.loadAsync(modelPath);
             this.model = gltf.scene;
-            
+    
             const initialScale = this.baseScale * this.userScaleFactor;
             this.model.scale.set(initialScale, initialScale, initialScale);
-            
+    
             this.model.position.set(0, 0, 0);
-            
+    
             this.scene.add(this.model);
-            console.log('Lunettes chargées correctement');
-
+            console.log('Lunettes chargées correctement:', modelPath);
+    
         } catch (error) {
             console.error('Erreur lors du chargement des lunettes', error);
-            throw error;
         }
     }
+    
 
 }

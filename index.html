@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./src/style.css">
   <title>LunAR</title>
   <style>
     body, html {
@@ -29,10 +30,27 @@
 </style>
 </head>
 <body>
-<div id="container">
-    <video id="video" playsinline></video>
-    <canvas id="canvas3d"></canvas>
-</div>
-  <script type="module" src="src/app.js"></script>
+
+
+    <div id="controls">
+        <label for="glassesSelector">Choisissez vos lunettes :</label>
+        <select id="glassesSelector">
+            <option value="/sans_nom5.glb">Modèle 1</option>
+            <option value="/sans_nom1.glb">Modèle 2</option>
+            <option value="/sans_nom2.glb">Modèle 3</option>
+            <option value="/sans_nom7.glb">Modèle 4</option>
+        </select>
+    </div>
+
+    <div id="container">
+        <video id="video" playsinline></video>
+        <canvas id="canvas3d"></canvas>
+    </div>
+
+
+    <script type="module" src="src/app.js"></script>
+
 </body>
+
+
 </html>

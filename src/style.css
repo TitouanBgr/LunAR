@@ -11,3 +11,29 @@ video, canvas {
   height: 100%;
   object-fit: cover;
 }
+
+#controls {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#glassesSelector {
+    font-size: 16px;
+    padding: 5px;
+    background: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
